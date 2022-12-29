@@ -1,0 +1,48 @@
+parameters:
+    app.mailer.enabled: '%env(bool:MAILER_ENABLED)%'
+    app.mailer.sender: '%env(MAILER_SENDER)%'
+    app.mailer.subject: '%env(MAILER_SUBJECT)%'
+    app.pushy.enabled: '%env(bool:PUSHY_ENABLED)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    _instanceof:
+        App\MessagingProvider\NotificationServiceInterface:
+            public: true
+            tags:
+                - { name: 'app.notification.service' }
+
+    App\MessagingProvider\NotificationServiceLocator:
+        arguments:
+            - !tagged_iterator
+                tag: 'app.notification.service'
+
+    App\MessagingProvider\Pushy\NotificationService:
+        tags: [ { name: 'app.notification.service', priority: 100} ]
+
+    App\MessagingProvider\Mailgun\NotificationService:
+        tags: [ { name: 'app.notification.service', priority: 50} ]
+
+    App\MessagingProvider\Pushy\PushyHttpClient:
+        arguments:
+            $apiUrl: '%env(PUSHY_URL)%'
+            $apiKey: '%env(PUSHY_API_KEY)%'
+
+    App\Form\NotificationFormType:
+        arguments:
+            $emptyData:
+                phoneNumber: '%env(MSG_TEL)%'
+                email: '%env(MSG_EMAIL)%'
+                pushyToken: '%env(MSG_PUSHY)%'
+                message: '%env(MSG_BODY)%'
