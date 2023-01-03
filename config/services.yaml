@@ -23,6 +23,11 @@ services:
             tags:
                 - { name: 'app.notification.service' }
 
+        App\MessagingProvider\ProviderConfigurationInterface:
+            public: true
+            tags:
+                - { name: 'app.provider.config' }
+
     App\MessagingProvider\NotificationServiceLocator:
         arguments:
             - !tagged_iterator
@@ -46,3 +51,8 @@ services:
                 email: '%env(MSG_EMAIL)%'
                 pushyToken: '%env(MSG_PUSHY)%'
                 message: '%env(MSG_BODY)%'
+
+    App\Form\ChannelsFormType:
+        arguments:
+            - !tagged_iterator
+                tag: 'app.provider.config'

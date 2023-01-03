@@ -2,36 +2,17 @@
 
 namespace App\Controller;
 
-use App\DTO\NotificationFormData;
-use App\Form\NotificationFormType;
-use App\MessagingProvider\NotificationServiceLocator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class IndexController extends AbstractController
 {
-    public function __construct(
-        private readonly NotificationServiceLocator $serviceLocator,
-    )
-    {}
-
     #[Route('/', name: 'main')]
-    public function register(Request $request): Response
+    #[IsGranted('ROLE_USER')]
+    public function register(): Response
     {
-        $form = $this->createForm(NotificationFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var NotificationFormData $notificationData */
-            $notificationData = $form->getData();
-            $this->serviceLocator->sendWithFallback($notificationData);
-        }
-
-        return $this->render('main/index.html.twig', [
-            'notificationForm' => $form->createView(),
-        ]);
+        return $this->render('main/index.html.twig');
     }
 }

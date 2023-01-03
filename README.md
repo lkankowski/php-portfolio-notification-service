@@ -19,18 +19,12 @@ MAILER_DSN=mailgun://[API_KEY]:[DOMAIN]@default?region=us
 MAILER_SENDER='Test user <mailgun@[DOMAIN]>'
 MAILER_SUBJECT='Test subject'
 ```
-Temporary for testing:
-```ini
-MSG_TEL=[DEFAULT PHONE NUMBER INCLUDING +COUNTRY_CODE]
-MSG_EMAIL=[DEFAULT EMAIL]
-MSG_PUSHY=[DEFAULT PUSHY DEVICE_ID/TOPIC]
-MSG_BODY='[DEFAULT MESSAGE CONTENT]'
-```
 
 
 ## Install
 ```shell
 composer install
+bin/console doctrine:migrations:migrate
 ```
 or single command
 ```shell
@@ -67,12 +61,17 @@ to receive communication in their preferred language.
 
 
 ## TO IMPROVE
-* more abstraction over recipient data currently stored directly in `NotificationFormData`
-  * require that every provider implement common interface and use `!tagged_iterator` when building recipient form
-* introduce user account with persisted data
-  * move recipient configuration into account
-  * require login for sending notification
-  * move services configuration into user account (enable/disable and priorities)
-* use SMTP instead of direct integration and use MailHog/MailCatcher for development
-* functional test with Codeception?
-* use Make for task automation (run tests and static analysis)
+* [ ] more abstraction over recipient data currently stored directly in `NotificationFormData`
+  * [ ] require that every provider implement common interface and use `!tagged_iterator` when building recipient form
+* [ ] introduce user account with persisted data
+  * [ ] move recipient configuration into account
+  * [x] require login for sending notification
+  * [ ] move services configuration into user account (enable/disable and priorities)
+* [ ] use SMTP instead of direct integration and use MailHog/MailCatcher for development
+* [ ] functional test with Codeception?
+* [ ] use Make for task automation (run tests and static analysis)
+* [ ] move ORM attributes to XML
+* [ ] `bin/console doctrine:migrations:migrate` into docker entrypoint
+* [ ] docker multi-stage build (separate xdebug?)
+* [ ] CSRF
+* [ ] move out entities/EM from controllers?

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Configure channels</h2>
+
+    {{ form_start(channelsForm) }}
+    {{ form_widget(channelsForm) }}
+    {{ form_end(channelsForm) }}
+    <a href="{{ path('main') }}" class="btn btn-link" role="button">back to main</a>
+{% endblock %}

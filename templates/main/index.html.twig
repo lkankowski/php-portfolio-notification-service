@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Notification Service{% endblock %}
-
 {% block body %}
-    <h1>Notification Service</h1>
+    <h2>Index</h2>
 
-    {{ form_start(notificationForm) }}
-    {{ form_widget(notificationForm) }}
-    {{ form_end(notificationForm) }}
+    <ul>
+        <li><a href="{{ path('app_channels') }}" class="btn btn-link" role="button">Setup channels</a></li>
+        <li><a href="{{ path('main') }}" class="btn btn-link" role="button">Send notification</a></li>
+        <li><a href="{{ path('app_logout') }}" class="btn btn-link" role="button">Logout</a></li>
+    </ul>
 
 {% endblock %}

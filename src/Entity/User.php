@@ -21,17 +21,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    /** @var string[] */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var ?string The hashed password */
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserChannels $userChannels = null;
 
     public function getId(): ?int
     {
@@ -50,19 +49,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
+    /** @see UserInterface */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -79,9 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -94,23 +83,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
-    public function isVerified(): bool
+    public function getUserChannels(): ?UserChannels
     {
-        return $this->isVerified;
+        return $this->userChannels;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function setUserChannels(?UserChannels $userChannels): self
     {
-        $this->isVerified = $isVerified;
+        // unset the owning side of the relation if necessary
+        if ($userChannels === null && $this->userChannels !== null) {
+            $this->userChannels->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($userChannels !== null && $userChannels->getUser() !== $this) {
+            $userChannels->setUser($this);
+        }
+
+        $this->userChannels = $userChannels;
 
         return $this;
     }
