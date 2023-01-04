@@ -11,13 +11,13 @@ interface NotificationServiceInterface
 {
     public function getProviderName(): string;
 
-    public function isEnabled(): bool;
-
     /**
+     * @param array<string, string> $config
+     *
      * @throws UnableToSendNotificationException
      * @throws TransportExceptionInterface
      */
-    public function send(NotificationFormData $notificationFormData): bool; //TODO: use some result class or Either<Fail,Result>
+    public function send(NotificationFormData $notificationFormData, array $config): bool; //TODO: use some result class or Either<Fail,Result>
 
     /** @return ProviderConfigItem[] */
     public function getConfigFields(): array;

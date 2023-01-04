@@ -8,9 +8,11 @@ use App\DTO\NotificationFormData;
 use App\Form\FieldType;
 use App\MessagingProvider\NotificationServiceInterface;
 use App\MessagingProvider\ProviderConfigItem;
+use App\MessagingProvider\UnableToSendNotificationException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 final class NotificationService implements NotificationServiceInterface
 {
@@ -27,16 +29,14 @@ final class NotificationService implements NotificationServiceInterface
         return self::PROVIDER_NAME;
     }
 
-    public function isEnabled(): bool
-    {
-        return $this->params->get('app.mailer.enabled');
-    }
-
-    public function send(NotificationFormData $notificationFormData): bool
+    /**
+     * @param array<string, string> $config
+     */
+    public function send(NotificationFormData $notificationFormData, array $config): bool
     {
         $email = (new Email())
             ->from($this->params->get('app.mailer.sender'))
-            ->to($notificationFormData->getEmail())
+            ->to($config['email'])
             ->subject($this->params->get('app.mailer.subject'))
             ->text($notificationFormData->getMessage());
 

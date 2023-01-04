@@ -37,7 +37,11 @@ class NotificationController extends AbstractController
 
                 /** @var NotificationFormData $notificationData */
                 $notificationData = $form->getData();
-                $this->serviceLocator->sendWithFallback($notificationData, $config);
+                if ($this->serviceLocator->sendWithFallback($notificationData, $config)) {
+                    $this->addFlash('success', 'Notification sent');
+                } else {
+                    $this->addFlash('danger', 'Unable to send notification - try again or contact with support');
+                }
             } else {
                 $this->addFlash('warning', 'Missing channels configuration');
                 return $this->redirectToRoute('app_channels');

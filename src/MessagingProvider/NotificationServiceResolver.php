@@ -6,6 +6,7 @@ namespace App\MessagingProvider;
 
 use App\DTO\NotificationFormData;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 final class NotificationServiceResolver
@@ -17,17 +18,16 @@ final class NotificationServiceResolver
     )
     {}
 
-    /** @param array<string, string> */
-    public function sendWithFallback(NotificationFormData $notificationData, array $config): void
+    /** @param array<string, string> $config */
+    public function sendWithFallback(NotificationFormData $notificationData, array $config): bool
     {
-        foreach ($this->serviceProviders as $service) {
-            if (!$service->isEnabled()) {
-                continue;
-            }
+        $services = $this->getOrderedServices($config);
+
+        foreach ($services as $service) {
             try {
-                if ($service->send($notificationData)) {
+                if ($service->send($notificationData, $config)) {
                     $this->logger->info('Successfully sent notification using {provider}', ['provider' => $service->getProviderName()]);
-                    return;
+                    return true;
                 }
             } catch (UnableToSendNotificationException $ex) {
                 $this->logger->warning($ex->getMessage(), ['error' => $ex->content]);
@@ -38,17 +38,24 @@ final class NotificationServiceResolver
                 ]);
             }
         }
+
+        return false;
     }
 
-    /** @param array<string, string> */
+    /** @param array<string, string> $config */
     private function getOrderedServices(array $config): array
     {
-//        foreach ($this->serviceProviders as $service) {
-//
-//        }
-        $enabledServices = array_filter($this->serviceProviders, static fn(NotificationServiceInterface $item) =>
-            isset($config[$item->getConfigFields()[0]->id . '-priority']) ? $config[$item->getConfigFields()[0]->id . '-priority'] : true
+        $enabledServices = [];
+        foreach ($this->serviceProviders as $service) {
+            $configKey = $service->getConfigFields()[0]->id . '-enabled';
+            if (!isset($config[$configKey]) || $config[$configKey]) {
+                $enabledServices[] = $service;
+            }
+        }
+        usort($enabledServices, fn(NotificationServiceInterface $service1, NotificationServiceInterface $service2) =>
+            $config[$service1->getConfigFields()[0]->id . '-priority'] < $config[$service2->getConfigFields()[0]->id . '-priority']
         );
 
+        return $enabledServices;
     }
 }

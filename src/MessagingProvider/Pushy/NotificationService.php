@@ -27,16 +27,13 @@ final class NotificationService implements NotificationServiceInterface
         return self::PROVIDER_NAME;
     }
 
-    public function isEnabled(): bool
-    {
-        return $this->params->get('app.pushy.enabled');
-    }
-
     /**
+     * @param array<string, string> $config
+     *
      * @throws UnableToSendNotificationException
      * @throws TransportExceptionInterface
      */
-    public function send(NotificationFormData $notificationFormData): bool
+    public function send(NotificationFormData $notificationFormData, array $config): bool
     {
         // Optional push notification options (such as iOS notification fields) -> should be replaced with some DTO
         $options = [
@@ -50,7 +47,7 @@ final class NotificationService implements NotificationServiceInterface
 
         $this->client->sendPushNotification(
             $notificationFormData->getMessage(),
-            [$notificationFormData->getPushyRecipient()],
+            [$config['pushy-recipient']],
             $options,
         );
 

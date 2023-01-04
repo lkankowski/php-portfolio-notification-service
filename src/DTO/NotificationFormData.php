@@ -6,6 +6,7 @@ namespace App\DTO;
 
 final class NotificationFormData
 {
+    private string $notificationId;
     private string $message;
 
     public function __construct(
@@ -23,5 +24,15 @@ final class NotificationFormData
     public function setMessage(string $message): void
     {
         $this->message = $message;
+    }
+
+    public function getNotificationId(): string
+    {
+        return $this->notificationId;
+    }
+
+    public function setNotificationId(string $notificationId): void
+    {
+        $this->notificationId = $notificationId;
     }
 }

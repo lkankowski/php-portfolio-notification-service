@@ -1,8 +1,6 @@
 parameters:
-    app.mailer.enabled: '%env(bool:MAILER_ENABLED)%'
     app.mailer.sender: '%env(MAILER_SENDER)%'
     app.mailer.subject: '%env(MAILER_SUBJECT)%'
-    app.pushy.enabled: '%env(bool:PUSHY_ENABLED)%'
 
 services:
     _defaults:

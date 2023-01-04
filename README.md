@@ -10,11 +10,9 @@
 ## Setup
 Sample data in `.env.local`:
 ```ini
-PUSHY_ENABLED=true
 PUSHY_URL=https://api.pushy.me
 PUSHY_API_KEY=[PASTE YOUR SECRET API KEY HERE]
 
-MAILER_ENABLED=true
 MAILER_DSN=mailgun://[API_KEY]:[DOMAIN]@default?region=us
 MAILER_SENDER='Test user <mailgun@[DOMAIN]>'
 MAILER_SUBJECT='Test subject'
@@ -24,6 +22,7 @@ MAILER_SUBJECT='Test subject'
 ## Install
 ```shell
 composer install
+#bin/console doctrine:database:create
 bin/console doctrine:migrations:migrate
 ```
 or single command
@@ -59,6 +58,11 @@ Here is what we want to see in the service:
 to receive communication in their preferred language.
 * [ ] (Bonus point) Usage tracking: we can track what messages were sent, when and to whom.
 
+
+## Providers
+
+### Mailgun
+With trial account you can send emails only to authorized recipients - by default account owner.
 
 ## TO IMPROVE
 * [ ] more abstraction over recipient data currently stored directly in `NotificationFormData`
