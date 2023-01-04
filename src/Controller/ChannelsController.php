@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\DTO\UserChannelsData;
 use App\Entity\User;
-use App\Entity\UserChannels;
 use App\Form\ChannelsFormType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UserConfigurationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,17 +20,18 @@ class ChannelsController extends AbstractController
     public function index(
         Request $request,
         #[CurrentUser] User $user,
-        EntityManagerInterface $entityManager
+        UserConfigurationService $userConfigurationService,
     ): Response
     {
-        $userChannels = $user->getUserChannels() ?? new UserChannels();
-        $form = $this->createForm(ChannelsFormType::class, $userChannels->getConfigJson());
+        $userChannelsConfigJson = $userConfigurationService->getChannelsConfiguration($user);
+
+        $form = $this->createForm(ChannelsFormType::class, $userChannelsConfigJson);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userChannels->setConfig(\json_encode($form->getData(),  \JSON_THROW_ON_ERROR));
-            $entityManager->persist($userChannels);
-            $entityManager->flush();
+
+            $userChannelsData = new UserChannelsData($user->getId(), \json_encode($form->getData(),  \JSON_THROW_ON_ERROR));
+            $userConfigurationService->saveUserChannels($userChannelsData);
 
             return $this->redirectToRoute('main');
         }

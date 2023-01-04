@@ -73,4 +73,4 @@ With trial account you can send emails only to authorized recipients - by defaul
 * [ ] `bin/console doctrine:migrations:migrate` into docker entrypoint
 * [ ] docker multi-stage build (separate xdebug?)
 * [ ] CSRF
-* [ ] move out entities/EM from controllers?
+* [ ] move out entities/EM from controllers (currently done only in `ChannelsController`)
