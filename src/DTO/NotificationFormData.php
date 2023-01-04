@@ -13,8 +13,8 @@ final class NotificationFormData
         'Sample notification 4' => 'notification4',
     ];
 
-    private string $notificationId;
-    private string $message;
+    private string $notificationId = '';
+    private string $message = '';
 
     public function getMessage(): string
     {

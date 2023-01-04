@@ -36,7 +36,7 @@ final class PushyHttpClientTest extends TestCase
         $lazyResponse->method('getStatusCode')->willReturn(200);
         $lazyResponse->method('getContent')->willReturn('{}');
 
-        $this->sut->sendPushNotification('some message', 'receipient', []);
+        $this->sut->sendPushNotification('some message', ['receipient'], []);
     }
 
     public function testSendPushNotificationFailWhenInvalidJson(): void
@@ -50,7 +50,7 @@ final class PushyHttpClientTest extends TestCase
 
         $this->expectException(UnableToSendNotificationException::class);
 
-        $this->sut->sendPushNotification('{}', 'token', []);
+        $this->sut->sendPushNotification('{}', ['token'], []);
     }
 
     public function testSendPushNotificationFailWhenTransportException(): void
@@ -63,7 +63,7 @@ final class PushyHttpClientTest extends TestCase
 
         $this->expectException(UnableToSendNotificationException::class);
 
-        $this->sut->sendPushNotification('{}', 'token', []);
+        $this->sut->sendPushNotification('{}', ['token'], []);
     }
 
     protected function setUp(): void

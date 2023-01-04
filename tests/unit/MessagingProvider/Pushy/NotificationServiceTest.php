@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\MessagingProvider\Pushy;
+namespace App\Tests\unit\MessagingProvider\Pushy;
 
 use App\DTO\NotificationFormData;
 use App\MessagingProvider\Pushy\NotificationService;
 use App\MessagingProvider\Pushy\PushyHttpClient;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 final class NotificationServiceTest extends TestCase
 {
@@ -17,8 +18,10 @@ final class NotificationServiceTest extends TestCase
     public function testSendSuccessful(): void
     {
         $notification = new NotificationFormData();
+        $notification->setNotificationId('dummy');
+        $notification->setMessage('dummy');
 
-        $result = $this->sut->send($notification);
+        $result = $this->sut->send($notification, ['pushy-recipient' => 'dummy']);
 
         $this->assertTrue($result);
     }
@@ -26,6 +29,7 @@ final class NotificationServiceTest extends TestCase
     protected function setUp(): void
     {
         $pushyClient = $this->createStub(PushyHttpClient::class);
-        $this->sut = new NotificationService($pushyClient);
+        $params = $this->createStub(ContainerBagInterface::class);
+        $this->sut = new NotificationService($pushyClient, $params);
     }
 }

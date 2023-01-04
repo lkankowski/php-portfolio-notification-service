@@ -65,7 +65,7 @@ to receive communication in their preferred language.
 With trial account you can send emails only to authorized recipients - by default account owner.
 
 ## TO IMPROVE
-* [ ] more abstraction over recipient data currently stored directly in `NotificationFormData`
+* [ ] more tests
 * [ ] use SMTP instead of direct integration and use MailHog/MailCatcher for development
 * [ ] functional test with Codeception?
 * [ ] use Make for task automation (run tests and static analysis)
