@@ -16,11 +16,7 @@ class NotificationFormType extends AbstractType
     {
         $builder
             ->add('notificationId', ChoiceType::class, [
-                'choices' => [
-                    'Sample notification 1' => 'abc',
-                    'Sample notification 2' => 'def',
-                    'Sample notification 3' => 'ghi',
-                ]
+                'choices' => NotificationFormData::NOTIFICATIONS,
             ])
             ->add('message', TextareaType::class, [
                 'label' => 'Message',

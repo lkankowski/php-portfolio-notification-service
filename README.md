@@ -54,7 +54,7 @@ your own test accounts on each.
 Here is what we want to see in the service:
 * [x] Multi-channel: service can send messages via the multiple channels, with a fail-over
 * [x] Configuration-driven: It is possible to enable / disable different communication channels with configuration.
-* [ ] (Bonus point) Localisation: service supports localised messages, in order for the customer
+* [x] (Bonus point) Localisation: service supports localised messages, in order for the customer
 to receive communication in their preferred language.
 * [ ] (Bonus point) Usage tracking: we can track what messages were sent, when and to whom.
 
@@ -66,11 +66,6 @@ With trial account you can send emails only to authorized recipients - by defaul
 
 ## TO IMPROVE
 * [ ] more abstraction over recipient data currently stored directly in `NotificationFormData`
-  * [ ] require that every provider implement common interface and use `!tagged_iterator` when building recipient form
-* [ ] introduce user account with persisted data
-  * [ ] move recipient configuration into account
-  * [x] require login for sending notification
-  * [ ] move services configuration into user account (enable/disable and priorities)
 * [ ] use SMTP instead of direct integration and use MailHog/MailCatcher for development
 * [ ] functional test with Codeception?
 * [ ] use Make for task automation (run tests and static analysis)

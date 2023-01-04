@@ -6,8 +6,8 @@ namespace App\MessagingProvider;
 
 use App\DTO\NotificationFormData;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class NotificationServiceResolver
 {
@@ -15,17 +15,31 @@ final class NotificationServiceResolver
     public function __construct(
         private readonly iterable $serviceProviders,
         private readonly LoggerInterface $logger,
+        private readonly TranslatorInterface $translator,
     )
     {}
 
     /** @param array<string, string> $config */
     public function sendWithFallback(NotificationFormData $notificationData, array $config): bool
     {
+        $lang = 'pl_PL'; //could be in config
+        $translatedNotification = $this->translator->trans($notificationData->getNotificationId(), locale: $lang);
+        $message = \sprintf(
+            "%s\n\n %s:\n%s",
+            $translatedNotification,
+            $this->translator->trans('Custom part of the notification', locale: $lang),
+            $notificationData->getMessage(),
+        );
+
+        $newNotificationData = new NotificationFormData();
+        $newNotificationData->setNotificationId($notificationData->getNotificationId());
+        $newNotificationData->setMessage($message);
+
         $services = $this->getOrderedServices($config);
 
         foreach ($services as $service) {
             try {
-                if ($service->send($notificationData, $config)) {
+                if ($service->send($newNotificationData, $config)) {
                     $this->logger->info('Successfully sent notification using {provider}', ['provider' => $service->getProviderName()]);
                     return true;
                 }

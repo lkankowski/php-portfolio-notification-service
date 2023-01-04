@@ -6,15 +6,15 @@ namespace App\DTO;
 
 final class NotificationFormData
 {
+    public const NOTIFICATIONS = [
+        'Sample notification 1' => 'notification1',
+        'Sample notification 2' => 'notification2',
+        'Sample notification 3' => 'notification3',
+        'Sample notification 4' => 'notification4',
+    ];
+
     private string $notificationId;
     private string $message;
-
-    public function __construct(
-        string $message = '',
-    )
-    {
-        $this->message = $message;
-    }
 
     public function getMessage(): string
     {

@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
+use App\MessagingProvider\NotificationServiceInterface;
 use App\MessagingProvider\ProviderConfigItem;
-use App\MessagingProvider\ProviderConfigurationInterface;
 use App\MessagingProvider\ProviderConfigTypeMapper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -13,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChannelsFormType extends AbstractType
@@ -23,7 +22,7 @@ class ChannelsFormType extends AbstractType
         TelType::class,
     ];
 
-    /** @param ProviderConfigurationInterface[] $providersConfig */
+    /** @param NotificationServiceInterface[] $providersConfig */
     public function __construct(private readonly iterable $providersConfig)
     {}
 
@@ -71,7 +70,7 @@ class ChannelsFormType extends AbstractType
     {
         $formFields = [];
 
-        /** @var ProviderConfigurationInterface $provider */
+        /** @var NotificationServiceInterface $provider */
         foreach ($this->providersConfig as $provider) {
             foreach ($provider->getConfigFields() as $field) {
                 $formFields[$field->id] = $field;
