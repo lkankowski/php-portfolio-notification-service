@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\MessagingProvider\Pushy;
 
 use App\DTO\NotificationFormData;
+use App\Form\FieldType;
 use App\MessagingProvider\NotificationServiceInterface;
+use App\MessagingProvider\ProviderConfigItem;
 use App\MessagingProvider\UnableToSendNotificationException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -53,5 +55,12 @@ final class NotificationService implements NotificationServiceInterface
         );
 
         return true;
+    }
+
+    public function getConfigFields(): array
+    {
+        return [
+            new ProviderConfigItem(FieldType::Text, 'pushy-recipient', 'Pushy device ID or topic', 90),
+        ];
     }
 }

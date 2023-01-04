@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\MessagingProvider\Mailgun;
 
 use App\DTO\NotificationFormData;
+use App\Form\FieldType;
 use App\MessagingProvider\NotificationServiceInterface;
+use App\MessagingProvider\ProviderConfigItem;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -41,5 +43,12 @@ final class NotificationService implements NotificationServiceInterface
         $this->mailer->send($email);
 
         return true;
+    }
+
+    public function getConfigFields(): array
+    {
+        return [
+            new ProviderConfigItem(FieldType::Email, 'email', 'Email', 50),
+        ];
     }
 }

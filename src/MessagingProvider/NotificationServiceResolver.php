@@ -8,7 +8,7 @@ use App\DTO\NotificationFormData;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-final class NotificationServiceLocator
+final class NotificationServiceResolver
 {
     /** @var NotificationServiceInterface[] $serviceProviders */
     public function __construct(
@@ -17,7 +17,8 @@ final class NotificationServiceLocator
     )
     {}
 
-    public function sendWithFallback(NotificationFormData $notificationData): void
+    /** @param array<string, string> */
+    public function sendWithFallback(NotificationFormData $notificationData, array $config): void
     {
         foreach ($this->serviceProviders as $service) {
             if (!$service->isEnabled()) {
@@ -37,5 +38,17 @@ final class NotificationServiceLocator
                 ]);
             }
         }
+    }
+
+    /** @param array<string, string> */
+    private function getOrderedServices(array $config): array
+    {
+//        foreach ($this->serviceProviders as $service) {
+//
+//        }
+        $enabledServices = array_filter($this->serviceProviders, static fn(NotificationServiceInterface $item) =>
+            isset($config[$item->getConfigFields()[0]->id . '-priority']) ? $config[$item->getConfigFields()[0]->id . '-priority'] : true
+        );
+
     }
 }

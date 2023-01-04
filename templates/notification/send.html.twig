@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Notification Service</h1>
+    <h2>Send notification</h2>
 
     {{ form_start(notificationForm) }}
     {{ form_widget(notificationForm) }}
     {{ form_end(notificationForm) }}
 
+    <a href="{{ path('main') }}" class="btn btn-link" role="button">back to main</a>
 {% endblock %}

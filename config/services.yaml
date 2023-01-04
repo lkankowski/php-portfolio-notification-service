@@ -23,36 +23,17 @@ services:
             tags:
                 - { name: 'app.notification.service' }
 
-        App\MessagingProvider\ProviderConfigurationInterface:
-            public: true
-            tags:
-                - { name: 'app.provider.config' }
-
-    App\MessagingProvider\NotificationServiceLocator:
+    App\MessagingProvider\NotificationServiceResolver:
         arguments:
             - !tagged_iterator
                 tag: 'app.notification.service'
-
-    App\MessagingProvider\Pushy\NotificationService:
-        tags: [ { name: 'app.notification.service', priority: 100} ]
-
-    App\MessagingProvider\Mailgun\NotificationService:
-        tags: [ { name: 'app.notification.service', priority: 50} ]
 
     App\MessagingProvider\Pushy\PushyHttpClient:
         arguments:
             $apiUrl: '%env(PUSHY_URL)%'
             $apiKey: '%env(PUSHY_API_KEY)%'
 
-    App\Form\NotificationFormType:
-        arguments:
-            $emptyData:
-                phoneNumber: '%env(MSG_TEL)%'
-                email: '%env(MSG_EMAIL)%'
-                pushyToken: '%env(MSG_PUSHY)%'
-                message: '%env(MSG_BODY)%'
-
     App\Form\ChannelsFormType:
         arguments:
             - !tagged_iterator
-                tag: 'app.provider.config'
+                tag: 'app.notification.service'

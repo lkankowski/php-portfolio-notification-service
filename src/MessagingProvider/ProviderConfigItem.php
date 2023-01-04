@@ -12,6 +12,7 @@ final class ProviderConfigItem
         public readonly FieldType $type,
         public readonly string $id,
         public readonly string $description,
+        public readonly int $defaultPriority,
     )
     {}
 }

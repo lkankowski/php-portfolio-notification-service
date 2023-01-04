@@ -18,4 +18,7 @@ interface NotificationServiceInterface
      * @throws TransportExceptionInterface
      */
     public function send(NotificationFormData $notificationFormData): bool; //TODO: use some result class or Either<Fail,Result>
+
+    /** @return ProviderConfigItem[] */
+    public function getConfigFields(): array;
 }
