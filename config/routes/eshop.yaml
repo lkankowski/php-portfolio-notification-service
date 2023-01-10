@@ -1,0 +1,3 @@
+controllers:
+  resource: ../../src/Eshop/UI/Controller/
+  type: attribute
